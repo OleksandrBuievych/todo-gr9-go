@@ -29,6 +29,9 @@ func (c TaskController) Save() http.HandlerFunc {
 			return
 		}
 
+		user := r.Context().Value(UserKey).(domain.User)
+		task.UserId = user.Id
+		task.Status = domain.New
 		task, err = c.taskService.Save(task)
 		if err != nil {
 			log.Printf("TaskController -> Save: %s", err)
