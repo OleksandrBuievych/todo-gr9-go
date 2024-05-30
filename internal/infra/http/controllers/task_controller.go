@@ -44,3 +44,20 @@ func (c TaskController) Save() http.HandlerFunc {
 		Created(w, tDto)
 	}
 }
+
+func (c TaskController) GetForUser() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		user := r.Context().Value(UserKey).(domain.User)
+
+		tasks, err := c.taskService.GetForUser(user.Id)
+		if err != nil {
+			log.Printf("TaskController -> GetForUser: %s", err)
+			InternalServerError(w, err)
+			return
+		}
+
+		var tasksDto resources.TasksDto
+		tasksDto = tasksDto.DomainToDtoCollection(tasks)
+		Success(w, tasksDto)
+	}
+}
