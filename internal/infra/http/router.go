@@ -127,6 +127,19 @@ func UserRouter(r chi.Router, uc controllers.UserController) {
 	})
 }
 
+func TaskRouter(r chi.Router, tc controllers.TaskController) {
+	r.Route("/tasks", func(apiRouter chi.Router) {
+		apiRouter.Post(
+			"/",
+			tc.Save(),
+		)
+		apiRouter.Get(
+			"/",
+			tc.GetForUser(),
+		)
+	})
+}
+
 func NotFoundJSON() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
